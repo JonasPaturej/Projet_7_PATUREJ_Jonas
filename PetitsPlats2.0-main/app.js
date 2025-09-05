@@ -1,9 +1,5 @@
 // Sélecteurs
-const searchInput = document.getElementById("search");
 const container = document.getElementById("recipes-container");
-const ingredientFilter = document.getElementById("ingredientFilter");
-const applianceFilter = document.getElementById("applianceFilter");
-const ustensilFilter = document.getElementById("ustensilFilter");
 const recipeCount = document.getElementById("recipeCount");
 
 // Affichage des recettes
