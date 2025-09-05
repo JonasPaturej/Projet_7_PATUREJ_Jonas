@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les Petits Plats</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="hero">
+    <h1>CHERCHEZ PARMI PLUS DE 1500 RECETTES<br>DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES</h1>
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Rechercher une recette, un ingrédient...">
+      <button id="searchBtn">🔍</button>
+    </div>
+  </header>
+
+  <section class="filters">
+    <select id="ingredientFilter">
+      <option value="">Ingrédients</option>
+    </select>
+    <select id="applianceFilter">
+      <option value="">Appareils</option>
+    </select>
+    <select id="ustensilFilter">
+      <option value="">Ustensiles</option>
+    </select>
+  </section>
+
+  <h2 id="recipeCount"></h2>
+  <main id="recipes-container"></main>
+
+  <script src="recipes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
