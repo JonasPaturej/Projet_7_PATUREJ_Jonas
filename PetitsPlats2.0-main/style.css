@@ -31,12 +31,13 @@ body {
   background: white;
   border-radius: 5px;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .search-bar input {
   border: none;
-  padding: 0.7rem;
-  width: 300px;
+  padding: 1.5rem;
+  width: 800px;
   font-size: 1rem;
 }
 
@@ -53,12 +54,15 @@ body {
   gap: 1rem;
   justify-content: center;
   margin: 1rem;
+  max-width: 1200px;
+  display: flex;
+  gap: 5rem;
 }
 
 #recipes-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 3rem;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -99,6 +103,27 @@ body {
   padding: 5px 10px;
   border-radius: 15px;
   font-size: 0.9rem;
+}
+
+.filters-bar {
+  display: flex;
+  justify-content: space-between; /* filtres à gauche, compteur à droite */
+  align-items: center;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 2rem;
+}
+
+select {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  border-style: none;
+}
+
+#recipeCount {
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
 .recipe-info {
@@ -142,7 +167,7 @@ h3 {
 
 .desc-text.clamp {
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -167,4 +192,22 @@ h3 {
 .toggle-desc:focus {
   outline: 2px solid rgba(255, 112, 67, 0.25);
   outline-offset: 2px;
+}
+
+.ingredients-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
+  gap: 1rem 2rem; /* espace lignes / colonnes */
+  margin-top: 0.5rem;
+}
+
+.ingredient-item {
+  display: flex;
+  flex-direction: column; /* empile le nom et la quantité */
+  font-size: 0.95rem;
+}
+
+.ingredient-item span {
+  color: gray; /* gris pour la quantité */
+  font-size: 0.9rem;
 }
