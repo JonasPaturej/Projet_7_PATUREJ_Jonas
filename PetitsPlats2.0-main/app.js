@@ -1,8 +1,12 @@
+import { recipes } from "./recipes.js";
+
 let selectedFilters = {
   ingredients: [],
   appliances: [],
   ustensils: [],
 };
+
+let currentRecipes = recipes;
 
 // Sélecteurs
 const container = document.getElementById("recipes-container");
@@ -32,6 +36,169 @@ function getUniqueElements(recipes, type) {
   });
   return Array.from(set).sort();
 }
+const activeFiltersContainer = document.getElementById("activeFilters");
+
+// Setup UI for a filter block
+function setupFilterUI(filterId, type, placeholderText) {
+  const root = document.getElementById(filterId);
+  if (!root) return null;
+
+  const header = root.querySelector(".filter-header");
+  const search = root.querySelector(".filter-search");
+  const optionsList = root.querySelector(".filter-options");
+
+  // Accessibility: allow keyboard toggle
+  header.tabIndex = 0;
+  header.setAttribute("role", "button");
+
+  // Close when click outside
+  function outsideClickListener(e) {
+    if (!root.contains(e.target)) {
+      root.classList.remove("open");
+      document.removeEventListener("click", outsideClickListener);
+    }
+  }
+
+  // Toggle open/close
+  function toggleOpen() {
+    const open = root.classList.toggle("open");
+    if (open) {
+      // open -> focus search and attach outside click close
+      search.focus();
+      document.addEventListener("click", outsideClickListener);
+    } else {
+      document.removeEventListener("click", outsideClickListener);
+    }
+    // update arrow
+    root.classList.toggle("is-open", open);
+  }
+
+  header.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleOpen();
+  });
+
+  header.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleOpen();
+    }
+  });
+
+  // Render options: selected first (yellow), then rest filtered by search
+  function renderOptions(allItems) {
+    const selected = selectedFilters[type] || [];
+    const searchTerm = (search.value || "").trim().toLowerCase();
+
+    // Build a set for quick skip
+    const selectedSet = new Set(selected);
+
+    optionsList.innerHTML = "";
+
+    // 1) selected items first (always visible)
+    selected.forEach((val) => {
+      const li = document.createElement("li");
+      li.className = "option-item selected";
+      li.dataset.value = val;
+      li.innerHTML = `<span class="label">${val}</span><button class="remove-btn" aria-label="Retirer ${val}">×</button>`;
+      optionsList.appendChild(li);
+    });
+
+    // 2) remaining items, filtered by search
+    allItems.forEach((it) => {
+      if (selectedSet.has(it)) return; // skip already selected (already added)
+      if (searchTerm && !it.toLowerCase().includes(searchTerm)) return;
+      const li = document.createElement("li");
+      li.className = "option-item";
+      li.dataset.value = it;
+      li.textContent = it;
+      optionsList.appendChild(li);
+    });
+  }
+
+  // Listen clicks (delegation) - select or remove
+  optionsList.addEventListener("click", (e) => {
+    const li = e.target.closest("li.option-item");
+    if (!li) return;
+    const value = li.dataset.value;
+
+    // If clicked the remove button inside a selected item
+    if (e.target.classList.contains("remove-btn")) {
+      selectedFilters[type] = (selectedFilters[type] || []).filter(
+        (v) => v !== value
+      );
+      filterRecipes(); // re-run global filter which will also call updateUIs
+      return;
+    }
+
+    // Toggle selection: if already selected -> remove, else add
+    if ((selectedFilters[type] || []).includes(value)) {
+      selectedFilters[type] = selectedFilters[type].filter((v) => v !== value);
+    } else {
+      selectedFilters[type] = [
+        ...new Set([...(selectedFilters[type] || []), value]),
+      ];
+    }
+
+    filterRecipes(); // trigger re-render of everything
+  });
+
+  // Input search -> re-render options live (keeps selected items visible)
+  search.addEventListener("input", () => {
+    renderOptions(getUniqueElements(recipes, type));
+  });
+
+  // Public update method
+  return {
+    update: () => renderOptions(getUniqueElements(currentRecipes, type)),
+    open: () => {
+      if (!root.classList.contains("open")) {
+        toggleOpen();
+      }
+    },
+  };
+}
+
+// Create three UIs (ids must match your HTML)
+const ingredientUI = setupFilterUI(
+  "ingredientFilter",
+  "ingredients",
+  "Rechercher un ingrédient..."
+);
+const applianceUI = setupFilterUI(
+  "applianceFilter",
+  "appliances",
+  "Rechercher un appareil..."
+);
+const ustensilUI = setupFilterUI(
+  "ustensilFilter",
+  "ustensils",
+  "Rechercher un ustensile..."
+);
+
+// Mets à jour les filtres sélectionnés en dessous de la barre de recherche du filtre
+function renderActiveFilters() {
+  if (!activeFiltersContainer) return;
+  activeFiltersContainer.innerHTML = "";
+
+  Object.entries(selectedFilters).forEach(([type, values]) => {
+    values.forEach((val) => {
+      const tag = document.createElement("div");
+      tag.className = "filter-tag";
+      tag.innerHTML = `<span class="tag-label">${val}</span><button class="tag-remove" aria-label="Retirer ${val}">×</button>`;
+
+      tag.querySelector(".tag-remove").addEventListener("click", () => {
+        // remove from selected filters and rerun filter
+        selectedFilters[type] = (selectedFilters[type] || []).filter(
+          (v) => v !== val
+        );
+        filterRecipes();
+      });
+
+      activeFiltersContainer.appendChild(tag);
+    });
+  });
+}
 
 // Fonction pour remplir un <select> ou une liste déroulante
 function fillFilter(element, items) {
@@ -49,7 +216,6 @@ function filterRecipes() {
   const searchTerm = searchInput.value.toLowerCase();
 
   let filtered = recipes.filter((recipe) => {
-    // Recherche globale
     const matchSearch =
       recipe.name.toLowerCase().includes(searchTerm) ||
       recipe.description.toLowerCase().includes(searchTerm) ||
@@ -57,7 +223,6 @@ function filterRecipes() {
         i.ingredient.toLowerCase().includes(searchTerm)
       );
 
-    // Vérification filtres sélectionnés
     const matchIngredients = selectedFilters.ingredients.every((f) =>
       recipe.ingredients.some((i) => i.ingredient === f)
     );
@@ -71,39 +236,16 @@ function filterRecipes() {
     return matchSearch && matchIngredients && matchAppliances && matchUstensils;
   });
 
+  // 🔥 mettre à jour la variable globale
+  currentRecipes = filtered;
+
   displayRecipes(filtered);
 
-  // Met à jour les filtres avec les éléments disponibles dans les recettes filtrées
-  fillFilter(ingredientFilter, getUniqueElements(filtered, "ingredients"));
-  fillFilter(applianceFilter, getUniqueElements(filtered, "appliances"));
-  fillFilter(ustensilFilter, getUniqueElements(filtered, "ustensils"));
+  ingredientUI && ingredientUI.update();
+  applianceUI && applianceUI.update();
+  ustensilUI && ustensilUI.update();
+  renderActiveFilters();
 }
-
-// Exemple d’ajout de filtre lorsqu’une option est sélectionnée
-ingredientFilter.addEventListener("change", (e) => {
-  if (e.target.value) {
-    selectedFilters.ingredients.push(e.target.value);
-    e.target.value = "";
-    filterRecipes();
-  }
-});
-
-// Même logique pour applianceFilter et ustensilFilter
-applianceFilter.addEventListener("change", (e) => {
-  if (e.target.value) {
-    selectedFilters.appliances.push(e.target.value);
-    e.target.value = "";
-    filterRecipes();
-  }
-});
-
-ustensilFilter.addEventListener("change", (e) => {
-  if (e.target.value) {
-    selectedFilters.ustensils.push(e.target.value);
-    e.target.value = "";
-    filterRecipes();
-  }
-});
 
 // Recherche globale
 searchInput.addEventListener("input", filterRecipes);
@@ -129,7 +271,7 @@ function displayRecipes(list) {
 
     card.innerHTML = `
       <div class="image-wrapper">
-        <img src="JSON recipes/${recipe.image}" alt="${escapeHtml(
+        <img src="JSON_recipes/${recipe.image}" alt="${escapeHtml(
       recipe.name
     )}">
         <span class="time">${escapeHtml(String(recipe.time))}min</span>

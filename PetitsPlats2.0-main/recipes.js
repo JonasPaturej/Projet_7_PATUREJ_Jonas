@@ -1,4 +1,4 @@
-const recipes = [
+export const recipes = [
   {
     id: 1,
     image: "Recette01.jpg",
@@ -220,7 +220,7 @@ const recipes = [
         unit: "cl",
       },
       {
-        ingredient: "Sucre en Poudre",
+        ingredient: "Sucre en poudre",
         quantity: 100,
         unit: "grammes",
       },
@@ -298,7 +298,7 @@ const recipes = [
         quantity: 2,
       },
       {
-        ingredient: "Sucre en Poudre",
+        ingredient: "Sucre en poudre",
         quantity: "110",
         unit: "grammes",
       },
@@ -1760,7 +1760,7 @@ const recipes = [
     servings: 4,
     ingredients: [
       {
-        ingredient: "Bananes",
+        ingredient: "Banane",
         quantity: 2,
       },
       {
@@ -1804,7 +1804,7 @@ const recipes = [
         quantity: 6,
       },
       {
-        ingredient: "Poudre d'amendes",
+        ingredient: "Poudre d'amandes",
         quantity: 500,
         unit: "grammes",
       },

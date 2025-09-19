@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Les Petits Plats</title>
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
 </head>
 <body>
   <header class="hero">
@@ -18,22 +19,28 @@
 
   <section class="filters-bar">
   <div class="filters">
-    <select id="ingredientFilter">
-      <option value="">Ingrédients</option>
-    </select>
-    <select id="applianceFilter">
-      <option value="">Appareils</option>
-    </select>
-    <select id="ustensilFilter">
-      <option value="">Ustensiles</option>
-    </select>
+    <div class="filter" id="ingredientFilter">
+      <div class="filter-header">Ingrédients</div>
+      <input type="text" class="filter-search" placeholder="Rechercher un ingrédient...">
+      <ul class="filter-options"></ul>
+    </div>
+
+    <div class="filter" id="applianceFilter">
+      <div class="filter-header">Appareils</div>
+      <input type="text" class="filter-search" placeholder="Rechercher un appareil...">
+      <ul class="filter-options"></ul>
+    </div>
+
+    <div class="filter" id="ustensilFilter">
+      <div class="filter-header">Ustensiles</div>
+      <input type="text" class="filter-search" placeholder="Rechercher un ustensile...">
+      <ul class="filter-options"></ul>
+    </div>
   </div>
   <p id="recipeCount"></p>
+  <div id="activeFilters"></div>
 </section>
 
   <main id="recipes-container"></main>
-
-  <script src="recipes.js"></script>
-  <script src="app.js"></script>
 </body>
 </html>

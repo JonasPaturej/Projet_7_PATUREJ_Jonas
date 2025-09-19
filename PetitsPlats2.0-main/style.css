@@ -107,7 +107,7 @@ body {
 
 .filters-bar {
   display: flex;
-  justify-content: space-between; /* filtres à gauche, compteur à droite */
+  justify-content: space-between;
   align-items: center;
   margin: 2rem auto;
   max-width: 1200px;
@@ -196,18 +196,145 @@ h3 {
 
 .ingredients-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 colonnes */
-  gap: 1rem 2rem; /* espace lignes / colonnes */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
   margin-top: 0.5rem;
 }
 
 .ingredient-item {
   display: flex;
-  flex-direction: column; /* empile le nom et la quantité */
+  flex-direction: column;
   font-size: 0.95rem;
 }
 
 .ingredient-item span {
-  color: gray; /* gris pour la quantité */
+  color: gray;
   font-size: 0.9rem;
+}
+/* Filters container already styled elsewhere - these are specific filter styles */
+.filter {
+  position: relative;
+  width: 260px; /* ajuste */
+  font-family: "Arial", sans-serif;
+  margin-right: 1rem;
+}
+
+/* header (closed button) */
+.filter-header {
+  background: white;
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  user-select: none;
+}
+.filter-header .arrow {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* body (hidden until open) */
+.filter-body,
+.filter .filter-search,
+.filter .filter-options {
+  display: none; /* hidden by default */
+}
+
+/* when open -> show input and list */
+.filter.open .filter-search,
+.filter.open .filter-options {
+  display: block;
+}
+
+/* make the body look like a dropdown */
+.filter .filter-search {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* list */
+.filter .filter-options {
+  margin: 8px 0 0 0;
+  padding: 0;
+  list-style: none;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+/* item */
+.filter .filter-options .option-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  font-size: 0.95rem;
+}
+.filter .filter-options .option-item:hover {
+  background: #f6f6f6;
+}
+
+/* selected item style (top, yellow) */
+.filter .filter-options .option-item.selected {
+  background: #ffd15b;
+  color: #000;
+  font-weight: 700;
+}
+
+/* remove button inside selected item */
+.filter .filter-options .remove-btn,
+.filter-tag .tag-remove {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+/* tags below filters (yellow pills) */
+#activeFilters {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.8rem;
+  align-items: center;
+}
+
+.filter-tag {
+  background: #ffd15b;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-weight: 700;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.filter-tag .tag-label {
+  color: #000;
+}
+.filter-tag .tag-remove {
+  color: #000;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* small helpers to ensure search input is visible and aligned */
+.filter.open .filter-search {
+  display: block;
+}
+.filter.open .filter-options {
+  display: block;
 }
