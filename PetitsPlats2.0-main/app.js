@@ -1,14 +1,16 @@
 import { recipes } from "./recipes.js";
 
+// Tableau global des recettes actuellement affichées après filtrage
 let selectedFilters = {
   ingredients: [],
   appliances: [],
   ustensils: [],
 };
 
+// Tableau global des recettes actuellement affichées après filtrage
 let currentRecipes = recipes;
 
-// Sélecteurs
+// Sélecteurs du DOM
 const container = document.getElementById("recipes-container");
 const recipeCount = document.getElementById("recipeCount");
 const searchInput = document.getElementById("search");
@@ -36,9 +38,10 @@ function getUniqueElements(recipes, type) {
   });
   return Array.from(set).sort();
 }
+
 const activeFiltersContainer = document.getElementById("activeFilters");
 
-// Setup UI for a filter block
+// Configuration de l'interface utilisateur pour un bloc de filtre
 function setupFilterUI(filterId, type, placeholderText) {
   const root = document.getElementById(filterId);
   if (!root) return null;
@@ -47,11 +50,11 @@ function setupFilterUI(filterId, type, placeholderText) {
   const search = root.querySelector(".filter-search");
   const optionsList = root.querySelector(".filter-options");
 
-  // Accessibility: allow keyboard toggle
+  // Accessibilité : permettre le basculement au clavier
   header.tabIndex = 0;
   header.setAttribute("role", "button");
 
-  // Close when click outside
+  // Fermer quand on clique à l'extérieur
   function outsideClickListener(e) {
     if (!root.contains(e.target)) {
       root.classList.remove("open");
@@ -59,17 +62,17 @@ function setupFilterUI(filterId, type, placeholderText) {
     }
   }
 
-  // Toggle open/close
+  // Basculer ouverture/fermeture
   function toggleOpen() {
     const open = root.classList.toggle("open");
     if (open) {
-      // open -> focus search and attach outside click close
+      // ouvert -> focus sur la recherche et attaché le clic extérieur pour fermer
       search.focus();
       document.addEventListener("click", outsideClickListener);
     } else {
       document.removeEventListener("click", outsideClickListener);
     }
-    // update arrow
+    // mettre à jour la flèche
     root.classList.toggle("is-open", open);
   }
 
@@ -85,17 +88,17 @@ function setupFilterUI(filterId, type, placeholderText) {
     }
   });
 
-  // Render options: selected first (yellow), then rest filtered by search
+  // Afficher les options d'abord sélectionnées (en jaune), puis le reste filtré par la recherche
   function renderOptions(allItems) {
     const selected = selectedFilters[type] || [];
     const searchTerm = (search.value || "").trim().toLowerCase();
 
-    // Build a set for quick skip
+    // Créer un set pour ignorer les éléments déjà sélectionnés
     const selectedSet = new Set(selected);
 
     optionsList.innerHTML = "";
 
-    // 1) selected items first (always visible)
+    // Éléments sélectionnés en premier (toujours visibles)
     selected.forEach((val) => {
       const li = document.createElement("li");
       li.className = "option-item selected";
@@ -104,9 +107,9 @@ function setupFilterUI(filterId, type, placeholderText) {
       optionsList.appendChild(li);
     });
 
-    // 2) remaining items, filtered by search
+    // Éléments restants, filtrés par la recherche
     allItems.forEach((it) => {
-      if (selectedSet.has(it)) return; // skip already selected (already added)
+      if (selectedSet.has(it)) return; // ignorer déjà sélectionnés (déjà ajoutés)
       if (searchTerm && !it.toLowerCase().includes(searchTerm)) return;
       const li = document.createElement("li");
       li.className = "option-item";
@@ -116,22 +119,20 @@ function setupFilterUI(filterId, type, placeholderText) {
     });
   }
 
-  // Listen clicks (delegation) - select or remove
+  // Gestion des clics sur les options sélectionner et retirer
   optionsList.addEventListener("click", (e) => {
     const li = e.target.closest("li.option-item");
     if (!li) return;
     const value = li.dataset.value;
 
-    // If clicked the remove button inside a selected item
     if (e.target.classList.contains("remove-btn")) {
       selectedFilters[type] = (selectedFilters[type] || []).filter(
         (v) => v !== value
       );
-      filterRecipes(); // re-run global filter which will also call updateUIs
+      filterRecipes();
       return;
     }
 
-    // Toggle selection: if already selected -> remove, else add
     if ((selectedFilters[type] || []).includes(value)) {
       selectedFilters[type] = selectedFilters[type].filter((v) => v !== value);
     } else {
@@ -140,15 +141,13 @@ function setupFilterUI(filterId, type, placeholderText) {
       ];
     }
 
-    filterRecipes(); // trigger re-render of everything
+    filterRecipes();
   });
 
-  // Input search -> re-render options live (keeps selected items visible)
   search.addEventListener("input", () => {
     renderOptions(getUniqueElements(recipes, type));
   });
 
-  // Public update method
   return {
     update: () => renderOptions(getUniqueElements(currentRecipes, type)),
     open: () => {
@@ -159,7 +158,7 @@ function setupFilterUI(filterId, type, placeholderText) {
   };
 }
 
-// Create three UIs (ids must match your HTML)
+// Créer une interface utilisateur par filtre
 const ingredientUI = setupFilterUI(
   "ingredientFilter",
   "ingredients",
@@ -176,7 +175,7 @@ const ustensilUI = setupFilterUI(
   "Rechercher un ustensile..."
 );
 
-// Mets à jour les filtres sélectionnés en dessous de la barre de recherche du filtre
+// Met à jour les filtres sélectionnés sous la barre de recherche du filtre
 function renderActiveFilters() {
   if (!activeFiltersContainer) return;
   activeFiltersContainer.innerHTML = "";
@@ -188,7 +187,6 @@ function renderActiveFilters() {
       tag.innerHTML = `<span class="tag-label">${val}</span><button class="tag-remove" aria-label="Retirer ${val}">×</button>`;
 
       tag.querySelector(".tag-remove").addEventListener("click", () => {
-        // remove from selected filters and rerun filter
         selectedFilters[type] = (selectedFilters[type] || []).filter(
           (v) => v !== val
         );
@@ -200,9 +198,9 @@ function renderActiveFilters() {
   });
 }
 
-// Fonction pour remplir un <select> ou une liste déroulante
+// Fonction pour remplir une liste déroulante
 function fillFilter(element, items) {
-  element.innerHTML = element.options[0].outerHTML; // Garde le titre
+  element.innerHTML = element.options[0].outerHTML;
   items.forEach((item) => {
     const option = document.createElement("option");
     option.value = item;
@@ -236,7 +234,7 @@ function filterRecipes() {
     return matchSearch && matchIngredients && matchAppliances && matchUstensils;
   });
 
-  // 🔥 mettre à jour la variable globale
+  // Mettre à jour la variable globale
   currentRecipes = filtered;
 
   displayRecipes(filtered);
@@ -314,7 +312,7 @@ function displayRecipes(list) {
 
     container.appendChild(card);
 
-    // si la description est longue, on ajoute le toggle
+    // si la description est longue, on ajoute le bouton pour voir plus/moins
     if (isLong) {
       const btn = card.querySelector(".toggle-desc");
       const p = card.querySelector(".desc-text");
@@ -343,6 +341,6 @@ function escapeHtml(str) {
   return str ?? "";
 }
 
-// Init
+// Initialisation
 filterRecipes();
 displayRecipes(recipes);

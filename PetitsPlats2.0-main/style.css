@@ -211,7 +211,7 @@ h3 {
   color: gray;
   font-size: 0.9rem;
 }
-/* Filters container already styled elsewhere - these are specific filter styles */
+
 .filter {
   position: relative;
   width: 260px; /* ajuste */
@@ -219,7 +219,6 @@ h3 {
   margin-right: 1rem;
 }
 
-/* header (closed button) */
 .filter-header {
   background: white;
   border-radius: 8px;
@@ -236,20 +235,17 @@ h3 {
   color: #666;
 }
 
-/* body (hidden until open) */
 .filter-body,
 .filter .filter-search,
 .filter .filter-options {
-  display: none; /* hidden by default */
+  display: none;
 }
 
-/* when open -> show input and list */
 .filter.open .filter-search,
 .filter.open .filter-options {
   display: block;
 }
 
-/* make the body look like a dropdown */
 .filter .filter-search {
   width: 100%;
   padding: 8px 10px;
@@ -260,7 +256,6 @@ h3 {
   box-sizing: border-box;
 }
 
-/* list */
 .filter .filter-options {
   margin: 8px 0 0 0;
   padding: 0;
@@ -272,7 +267,6 @@ h3 {
   overflow-y: auto;
 }
 
-/* item */
 .filter .filter-options .option-item {
   padding: 10px 12px;
   cursor: pointer;
@@ -287,14 +281,12 @@ h3 {
   background: #f6f6f6;
 }
 
-/* selected item style (top, yellow) */
 .filter .filter-options .option-item.selected {
   background: #ffd15b;
   color: #000;
   font-weight: 700;
 }
 
-/* remove button inside selected item */
 .filter .filter-options .remove-btn,
 .filter-tag .tag-remove {
   background: transparent;
@@ -304,7 +296,6 @@ h3 {
   margin-left: 8px;
 }
 
-/* tags below filters (yellow pills) */
 #activeFilters {
   display: flex;
   gap: 0.6rem;
@@ -331,7 +322,6 @@ h3 {
   line-height: 1;
 }
 
-/* small helpers to ensure search input is visible and aligned */
 .filter.open .filter-search {
   display: block;
 }
