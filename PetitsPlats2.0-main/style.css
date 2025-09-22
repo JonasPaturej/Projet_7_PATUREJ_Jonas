@@ -50,13 +50,11 @@ body {
 }
 
 .filters {
-  display: flex;
-  gap: 1rem;
   justify-content: center;
   margin: 1rem;
   max-width: 1200px;
   display: flex;
-  gap: 5rem;
+  gap: 20px;
 }
 
 #recipes-container {
@@ -216,9 +214,11 @@ h3 {
 
 .filter {
   position: relative;
-  width: 150px;
-  font-family: "Arial", sans-serif;
+  width: 180px;
+  font-family: "Manrope", sans-serif;
   margin-right: 1rem;
+  background-color: white;
+  border-radius: 15px;
 }
 
 .filter-header {
@@ -229,7 +229,6 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   user-select: none;
 }
 .filter-header .arrow {
@@ -249,11 +248,11 @@ h3 {
 }
 
 .filter .filter-search {
-  width: 100%;
+  width: 90%;
   padding: 8px 10px;
-  margin-top: 8px;
-  border-radius: 6px;
-  border: 1px solid #e6e6e6;
+  margin: 5px 8px;
+  border-radius: 2px;
+  border: 1.5px solid lightgray;
   outline: none;
   box-sizing: border-box;
 }

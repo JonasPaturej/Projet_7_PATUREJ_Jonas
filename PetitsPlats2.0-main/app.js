@@ -64,16 +64,24 @@ function setupFilterUI(filterId, type, placeholderText) {
 
   // Basculer ouverture/fermeture
   function toggleOpen() {
-    const open = root.classList.toggle("open");
-    if (open) {
-      // ouvert -> focus sur la recherche et attaché le clic extérieur pour fermer
+    const isOpening = !root.classList.contains("open");
+
+    // Fermer tous les autres filtres
+    document.querySelectorAll(".filter.open").forEach((f) => {
+      if (f !== root) f.classList.remove("open");
+    });
+
+    // Ouvrir/fermer le menu courant
+    root.classList.toggle("open", isOpening);
+
+    if (isOpening) {
       search.focus();
       document.addEventListener("click", outsideClickListener);
     } else {
       document.removeEventListener("click", outsideClickListener);
     }
-    // mettre à jour la flèche
-    root.classList.toggle("is-open", open);
+
+    root.classList.toggle("is-open", isOpening);
   }
 
   header.addEventListener("click", (e) => {
