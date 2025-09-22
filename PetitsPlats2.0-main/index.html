@@ -18,26 +18,30 @@
   </header>
 
   <section class="filters-bar">
-  <div class="filters">
-    <div class="filter" id="ingredientFilter">
-      <div class="filter-header">Ingrédients</div>
-        <input type="text" class="filter-search" placeholder="Rechercher un ingrédient...">
+  <div class="filters-row">
+    <div class="filters">
+      <div class="filter" id="ingredientFilter">
+        <div class="filter-header">Ingrédients</div>
+        <input type="text" class="filter-search">
         <ul class="filter-options"></ul>
+      </div>
+
+      <div class="filter" id="applianceFilter">
+        <div class="filter-header">Appareils</div>
+        <input type="text" class="filter-search">
+        <ul class="filter-options"></ul>
+      </div>
+
+      <div class="filter" id="ustensilFilter">
+        <div class="filter-header">Ustensiles</div>
+        <input type="text" class="filter-search">
+        <ul class="filter-options"></ul>
+      </div>
     </div>
 
-    <div class="filter" id="applianceFilter">
-      <div class="filter-header">Appareils</div>
-      <input type="text" class="filter-search" placeholder="Rechercher un appareil...">
-      <ul class="filter-options"></ul>
-    </div>
-
-    <div class="filter" id="ustensilFilter">
-      <div class="filter-header">Ustensiles</div>
-      <input type="text" class="filter-search" placeholder="Rechercher un ustensile...">
-      <ul class="filter-options"></ul>
-    </div>
+    <p id="recipeCount"></p>
   </div>
-  <p id="recipeCount"></p>
+
   <div id="activeFilters"></div>
 </section>
 

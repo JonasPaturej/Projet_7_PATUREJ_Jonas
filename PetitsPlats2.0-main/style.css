@@ -124,6 +124,8 @@ select {
 #recipeCount {
   font-weight: 800;
   font-size: 1.1rem;
+  margin-top: 25px;
+  margin-left: 30px;
 }
 
 .recipe-info {
@@ -214,7 +216,7 @@ h3 {
 
 .filter {
   position: relative;
-  width: 260px; /* ajuste */
+  width: 150px;
   font-family: "Arial", sans-serif;
   margin-right: 1rem;
 }
@@ -298,10 +300,16 @@ h3 {
 
 #activeFilters {
   display: flex;
-  gap: 0.6rem;
   flex-wrap: wrap;
-  margin-top: 0.8rem;
+  gap: 10px;
+  margin-top: 15px;
   align-items: center;
+}
+
+.remove-btn:hover {
+  background-color: black;
+  color: #ffd15b;
+  border-radius: 15px;
 }
 
 .filter-tag {
@@ -327,4 +335,21 @@ h3 {
 }
 .filter.open .filter-options {
   display: block;
+}
+
+.filters-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px; /* espace entre les blocs */
+  margin-bottom: 20px;
+}
+
+.filters-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }

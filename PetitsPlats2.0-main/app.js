@@ -159,21 +159,9 @@ function setupFilterUI(filterId, type, placeholderText) {
 }
 
 // Créer une interface utilisateur par filtre
-const ingredientUI = setupFilterUI(
-  "ingredientFilter",
-  "ingredients",
-  "Rechercher un ingrédient..."
-);
-const applianceUI = setupFilterUI(
-  "applianceFilter",
-  "appliances",
-  "Rechercher un appareil..."
-);
-const ustensilUI = setupFilterUI(
-  "ustensilFilter",
-  "ustensils",
-  "Rechercher un ustensile..."
-);
+const ingredientUI = setupFilterUI("ingredientFilter", "ingredients");
+const applianceUI = setupFilterUI("applianceFilter", "appliances");
+const ustensilUI = setupFilterUI("ustensilFilter", "ustensils");
 
 // Met à jour les filtres sélectionnés sous la barre de recherche du filtre
 function renderActiveFilters() {
@@ -212,6 +200,17 @@ function fillFilter(element, items) {
 // Fonction pour filtrer les recettes selon les filtres et la barre de recherche
 function filterRecipes() {
   const searchTerm = searchInput.value.toLowerCase();
+
+  // Moins de 3 caractères = pas d'affichage de recette
+  if (searchTerm.length > 0 && searchTerm.length < 3) {
+    currentRecipes = recipes;
+    displayRecipes(currentRecipes);
+    ingredientUI && ingredientUI.update();
+    applianceUI && applianceUI.update();
+    ustensilUI && ustensilUI.update();
+    renderActiveFilters();
+    return;
+  }
 
   let filtered = recipes.filter((recipe) => {
     const matchSearch =
@@ -254,7 +253,11 @@ function displayRecipes(list) {
   recipeCount.textContent = `${list.length} recettes`;
 
   if (!list.length) {
-    container.innerHTML = "<p>Aucune recette trouvée</p>";
+    const searchTerm = searchInput.value.trim();
+    container.innerHTML = `<p>Aucune recette ne contient "${escapeHtml(
+      searchTerm
+    )}", vous pouvez chercher "tarte aux pommes", "poisson", etc.</p>`;
+    recipeCount.textContent = "0 recette";
     return;
   }
 
@@ -338,7 +341,13 @@ function displayRecipes(list) {
 }
 
 function escapeHtml(str) {
-  return str ?? "";
+  if (!str && str !== "") return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // Initialisation
