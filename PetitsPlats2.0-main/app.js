@@ -63,36 +63,37 @@ function setupFilterUI(filterId, type, placeholderText) {
   }
 
   // Basculer ouverture/fermeture
-  function toggleOpen() {
+  function toggleOpen(root, search) {
     const isOpening = !root.classList.contains("open");
 
-    // Fermer tous les autres filtres
-    document.querySelectorAll(".filter.open").forEach((f) => {
-      if (f !== root) f.classList.remove("open");
+    // Fermer tous les autres filtres avant d’ouvrir celui-ci
+    document.querySelectorAll(".filter-box").forEach((f) => {
+      if (f !== root) {
+        f.classList.remove("open");
+        f.classList.remove("is-open");
+      }
     });
 
-    // Ouvrir/fermer le menu courant
-    root.classList.toggle("open", isOpening);
-
     if (isOpening) {
+      root.classList.add("open", "is-open");
       search.focus();
       document.addEventListener("click", outsideClickListener);
     } else {
+      root.classList.remove("open", "is-open");
       document.removeEventListener("click", outsideClickListener);
     }
-
-    root.classList.toggle("is-open", isOpening);
   }
 
+  // Listeners
   header.addEventListener("click", (e) => {
     e.stopPropagation();
-    toggleOpen();
+    toggleOpen(root, search);
   });
 
   header.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      toggleOpen();
+      toggleOpen(root, search);
     }
   });
 
@@ -153,7 +154,7 @@ function setupFilterUI(filterId, type, placeholderText) {
   });
 
   search.addEventListener("input", () => {
-    renderOptions(getUniqueElements(recipes, type));
+    renderOptions(getUniqueElements(currentRecipes, type));
   });
 
   return {
