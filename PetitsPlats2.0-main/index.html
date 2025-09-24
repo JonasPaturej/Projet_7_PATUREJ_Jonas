@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Les Petits Plats</title>
   <link rel="stylesheet" href="style.css">
+  <link 
+  rel="stylesheet" 
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" 
+  crossorigin="anonymous" 
+  referrerpolicy="no-referrer" 
+/>
   <script type="module" src="app.js"></script>
 </head>
 <body>
@@ -13,7 +19,10 @@
     <h1>CHERCHEZ PARMI PLUS DE 1500 RECETTES<br>DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES</h1>
     <div class="search-bar">
       <input type="text" id="search" placeholder="Rechercher une recette, un ingrédient...">
-      <button id="searchBtn"></button>
+      <i id="clearSearch" class="fa-solid fa-xmark"></i>
+      <button id="searchBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
     </div>
   </header>
 
@@ -21,25 +30,37 @@
   <div class="filters-row">
     <div class="filter-group">
       <div class="filter-box" id="ingredientFilter">
-        <div class="filter-header">Ingrédients</div>
+        <div class="filter-header">Ingrédients <i class="fa-solid fa-chevron-down"></i></div>
         <div class="filter-background">
-          <input type="text" class="filter-search">
+          <div class="filter-input-wrapper">
+            <input type="text" class="filter-search">
+            <i class="fa-solid fa-xmark clear-filter"></i>
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
           <ul class="filter-options"></ul>
         </div>
       </div>
 
       <div class="filter-box" id="applianceFilter">
-        <div class="filter-header">Appareils</div>
+        <div class="filter-header">Appareils <i class="fa-solid fa-chevron-down"></i></div>
           <div class="filter-background">
-            <input type="text" class="filter-search">
+            <div class="filter-input-wrapper">
+              <input type="text" class="filter-search">
+              <i class="fa-solid fa-xmark clear-filter"></i>
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            </div>
             <ul class="filter-options"></ul>
         </div>
       </div>
 
       <div class="filter-box" id="ustensilFilter">
-        <div class="filter-header">Ustensiles</div>
+        <div class="filter-header">Ustensiles <i class="fa-solid fa-chevron-down"></i></div>
         <div class="filter-background">
-          <input type="text" class="filter-search">
+          <div class="filter-input-wrapper">
+            <input type="text" class="filter-search">
+            <i class="fa-solid fa-xmark clear-filter"></i>
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          </div>
           <ul class="filter-options"></ul>
         </div>
       </div>

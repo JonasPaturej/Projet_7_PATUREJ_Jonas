@@ -14,6 +14,7 @@ let currentRecipes = recipes;
 const container = document.getElementById("recipes-container");
 const recipeCount = document.getElementById("recipeCount");
 const searchInput = document.getElementById("search");
+const clearSearch = document.getElementById("clearSearch");
 const ingredientFilter = document.getElementById("ingredientFilter");
 const applianceFilter = document.getElementById("applianceFilter");
 const ustensilFilter = document.getElementById("ustensilFilter");
@@ -50,6 +51,25 @@ function setupFilterUI(filterId, type, placeholderText) {
   const search = root.querySelector(".filter-search");
   const optionsList = root.querySelector(".filter-options");
 
+  search.addEventListener("input", () => {
+    if (search.value.trim().length > 0) {
+      search.classList.add("has-text");
+    } else {
+      search.classList.remove("has-text");
+    }
+    renderOptions(getUniqueElements(currentRecipes, type));
+  });
+
+  // bouton croix = vider input
+  const clearBtn = root.querySelector(".clear-filter");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      search.value = "";
+      search.classList.remove("has-text");
+      renderOptions(getUniqueElements(currentRecipes, type));
+    });
+  }
+
   // Accessibilité : permettre le basculement au clavier
   header.tabIndex = 0;
   header.setAttribute("role", "button");
@@ -63,14 +83,15 @@ function setupFilterUI(filterId, type, placeholderText) {
   }
 
   // Basculer ouverture/fermeture
-  function toggleOpen(root, search) {
+  function toggleOpen(root, search, header) {
     const isOpening = !root.classList.contains("open");
 
-    // Fermer tous les autres filtres avant d’ouvrir celui-ci
+    // Fermer tous les autres filtres
     document.querySelectorAll(".filter-box").forEach((f) => {
       if (f !== root) {
-        f.classList.remove("open");
-        f.classList.remove("is-open");
+        f.classList.remove("open", "is-open");
+        const icon = f.querySelector(".filter-header i");
+        if (icon) icon.className = "fa-solid fa-chevron-down";
       }
     });
 
@@ -78,22 +99,28 @@ function setupFilterUI(filterId, type, placeholderText) {
       root.classList.add("open", "is-open");
       search.focus();
       document.addEventListener("click", outsideClickListener);
+
+      const icon = header.querySelector("i");
+      if (icon) icon.className = "fa-solid fa-chevron-down";
     } else {
       root.classList.remove("open", "is-open");
       document.removeEventListener("click", outsideClickListener);
+
+      const icon = header.querySelector("i");
+      if (icon) icon.className = "fa-solid fa-chevron-down";
     }
   }
 
   // Listeners
   header.addEventListener("click", (e) => {
     e.stopPropagation();
-    toggleOpen(root, search);
+    toggleOpen(root, search, header);
   });
 
   header.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      toggleOpen(root, search);
+      toggleOpen(root, search, header);
     }
   });
 
@@ -112,7 +139,10 @@ function setupFilterUI(filterId, type, placeholderText) {
       const li = document.createElement("li");
       li.className = "option-item selected";
       li.dataset.value = val;
-      li.innerHTML = `<span class="label">${val}</span><button class="remove-btn" aria-label="Retirer ${val}">×</button>`;
+      li.innerHTML = `
+    <span class="label">${val}</span>
+    <i class="fa-solid fa-circle-xmark remove-btn" aria-label="Retirer ${val}" style="cursor: pointer;"></i>
+    `;
       optionsList.appendChild(li);
     });
 
@@ -134,6 +164,7 @@ function setupFilterUI(filterId, type, placeholderText) {
     if (!li) return;
     const value = li.dataset.value;
 
+    // suppression uniquement si clic sur la croix
     if (e.target.classList.contains("remove-btn")) {
       selectedFilters[type] = (selectedFilters[type] || []).filter(
         (v) => v !== value
@@ -142,14 +173,15 @@ function setupFilterUI(filterId, type, placeholderText) {
       return;
     }
 
-    if ((selectedFilters[type] || []).includes(value)) {
-      selectedFilters[type] = selectedFilters[type].filter((v) => v !== value);
-    } else {
-      selectedFilters[type] = [
-        ...new Set([...(selectedFilters[type] || []), value]),
-      ];
+    // si c’est déjà sélectionné et qu’on ne clique pas la croix → on ignore
+    if (li.classList.contains("selected")) {
+      return;
     }
 
+    // Ajouter sinon
+    selectedFilters[type] = [
+      ...new Set([...(selectedFilters[type] || []), value]),
+    ];
     filterRecipes();
   });
 
@@ -181,8 +213,14 @@ function renderActiveFilters() {
     values.forEach((val) => {
       const tag = document.createElement("div");
       tag.className = "filter-tag";
-      tag.innerHTML = `<span class="tag-label">${val}</span><button class="tag-remove" aria-label="Retirer ${val}">×</button>`;
+      tag.innerHTML = `
+        <span class="tag-label">${val}</span>
+        <button class="tag-remove" aria-label="Retirer ${val}">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      `;
 
+      // 👉 seul le bouton supprime le filtre
       tag.querySelector(".tag-remove").addEventListener("click", () => {
         selectedFilters[type] = (selectedFilters[type] || []).filter(
           (v) => v !== val
@@ -240,6 +278,22 @@ function filterRecipes() {
     );
 
     return matchSearch && matchIngredients && matchAppliances && matchUstensils;
+  });
+
+  // Ajouter une croix pour supprimer le contenu des input
+  searchInput.addEventListener("input", () => {
+    if (searchInput.value.trim().length > 0) {
+      clearSearch.style.display = "block";
+    } else {
+      clearSearch.style.display = "none";
+    }
+  });
+
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    clearSearch.style.display = "none";
+    searchInput.focus();
+    filterRecipes();
   });
 
   // Mettre à jour la variable globale

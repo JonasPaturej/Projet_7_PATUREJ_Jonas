@@ -28,6 +28,7 @@ body {
 
 /* --- SEARCH --- */
 .search-bar {
+  position: relative;
   margin-top: 1rem;
   display: inline-flex;
   background: white;
@@ -48,6 +49,19 @@ body {
   border: none;
   padding: 0 1rem;
   cursor: pointer;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+#clearSearch {
+  position: absolute;
+  right: 80px; /* pile avant le bouton (ajuste selon padding du bouton) */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: gray;
+  cursor: pointer;
+  display: none;
 }
 
 /* --- FILTERS LAYOUT --- */
@@ -64,7 +78,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
 }
 
@@ -81,7 +95,7 @@ body {
   font-weight: 800;
   font-size: 1.1rem;
   margin-top: 25px;
-  margin-left: 30px;
+  margin-right: 30px;
 }
 
 /* --- FILTER BOX --- */
@@ -90,6 +104,7 @@ body {
   width: 180px;
   font-family: "Manrope", sans-serif;
   border-radius: 12px;
+  padding: 5px;
 }
 
 /* chaque filtre ouvert a son fond blanc */
@@ -111,9 +126,32 @@ body {
   user-select: none;
 }
 
-.filter-header .arrow {
-  font-size: 0.9rem;
-  color: #666;
+.filter-header i {
+  transition: transform 0.3s;
+}
+
+.fa-xmark {
+  color: black;
+}
+
+.fa-solid.fa-xmark.clear-filter {
+  display: none !important;
+}
+
+.filter-search.has-text ~ .clear-filter {
+  display: block !important;
+}
+
+.filter-input-wrapper .fa-xmark {
+  font-size: 12px;
+}
+
+.filter-input-wrapper .fa-magnifying-glass {
+  opacity: 50%;
+}
+
+.filter-box.open .filter-header i {
+  transform: rotate(180deg);
 }
 
 .filter-background {
@@ -137,13 +175,52 @@ body {
   top: 0;
   left: 0;
   width: 80%;
-  padding: 8px 10px;
-  margin: 5px 8px;
+  padding: 8px 8px;
+  margin: -18px 10px;
   border-radius: 4px;
   border: 1.5px solid lightgray;
   outline: none;
   background: white;
   display: none;
+}
+
+/* wrapper pour aligner loupe + input + croix */
+.filter-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: none; /* masqué tant que filtre fermé */
+}
+
+.filter-box.open .filter-input-wrapper {
+  display: block;
+}
+
+/* loupe : toujours visible à droite */
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  color: gray;
+  pointer-events: none;
+}
+
+/* croix : invisible tant qu'on n'a rien écrit */
+.clear-filter {
+  position: absolute;
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: gray;
+  cursor: pointer;
+  display: none;
+}
+
+/* affichage de la croix quand input rempli */
+.filter-input-wrapper .filter-search.has-text + .fa-xmark {
+  display: block;
 }
 
 /* OPTIONS LIST */
@@ -153,7 +230,8 @@ body {
   left: 0;
   width: 100%;
   background: white;
-  border-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   max-height: 220px;
   overflow-y: auto;
   display: none;
@@ -161,7 +239,6 @@ body {
   padding: 0;
   margin: 0;
   list-style: none;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Quand le filtre est ouvert */
@@ -181,6 +258,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   font-size: 0.95rem;
 }
+
 .filter-options .option-item:hover {
   background: #f6f6f6;
 }
@@ -191,7 +269,6 @@ body {
   font-weight: 700;
 }
 
-.filter-options .remove-btn,
 .filter-tag .tag-remove {
   background: transparent;
   border: none;
@@ -207,6 +284,8 @@ body {
   width: 86%;
   gap: 20px;
   margin: 0 auto;
+  max-width: 1200px;
+  width: 100%;
 }
 
 .filter-tag {
@@ -218,6 +297,7 @@ body {
   gap: 15px;
   align-items: center;
   margin-bottom: 20px;
+  cursor: default;
 }
 .filter-tag .tag-label {
   color: #000;
@@ -226,12 +306,7 @@ body {
   color: #000;
   font-size: 1rem;
   line-height: 1;
-}
-
-.remove-btn:hover {
-  background-color: black;
-  color: #ffd15b;
-  border-radius: 15px;
+  cursor: pointer;
 }
 
 /* --- RECIPES --- */
