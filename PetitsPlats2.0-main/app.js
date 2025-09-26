@@ -1,13 +1,13 @@
 import { recipes } from "./recipes.js";
 
-// Tableau global des recettes actuellement affichées après filtrage
+// Tableau des filtres sélectionnés
 let selectedFilters = {
   ingredients: [],
   appliances: [],
   ustensils: [],
 };
 
-// Tableau global des recettes actuellement affichées après filtrage
+// Tableau global des recettes actuellement affichées
 let currentRecipes = recipes;
 
 // Sélecteurs du DOM
@@ -42,7 +42,7 @@ function getUniqueElements(recipes, type) {
 
 const activeFiltersContainer = document.getElementById("activeFilters");
 
-// Configuration de l'interface utilisateur pour un bloc de filtre
+// Configuration de l'UI et du comportement d'un bloc de filtre
 function setupFilterUI(filterId, type, placeholderText) {
   const root = document.getElementById(filterId);
   if (!root) return null;
@@ -60,7 +60,7 @@ function setupFilterUI(filterId, type, placeholderText) {
     renderOptions(getUniqueElements(currentRecipes, type));
   });
 
-  // bouton croix = vider input
+  // Bouton croix = vider input
   const clearBtn = root.querySelector(".clear-filter");
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -158,7 +158,7 @@ function setupFilterUI(filterId, type, placeholderText) {
     });
   }
 
-  // Gestion des clics sur les options sélectionner et retirer
+  // Gestion des clics sur les options : ajout au filtre ou suppression via la croix
   optionsList.addEventListener("click", (e) => {
     const li = e.target.closest("li.option-item");
     if (!li) return;
@@ -173,12 +173,11 @@ function setupFilterUI(filterId, type, placeholderText) {
       return;
     }
 
-    // si c’est déjà sélectionné et qu’on ne clique pas la croix → on ignore
+    // si c’est déjà sélectionné et qu’on ne clique pas sur la croix → on ignore
     if (li.classList.contains("selected")) {
       return;
     }
 
-    // Ajouter sinon
     selectedFilters[type] = [
       ...new Set([...(selectedFilters[type] || []), value]),
     ];
@@ -204,7 +203,7 @@ const ingredientUI = setupFilterUI("ingredientFilter", "ingredients");
 const applianceUI = setupFilterUI("applianceFilter", "appliances");
 const ustensilUI = setupFilterUI("ustensilFilter", "ustensils");
 
-// Met à jour les filtres sélectionnés sous la barre de recherche du filtre
+// Affichage des filtres actifs sous le menu des filtres
 function renderActiveFilters() {
   if (!activeFiltersContainer) return;
   activeFiltersContainer.innerHTML = "";
@@ -220,7 +219,6 @@ function renderActiveFilters() {
         </button>
       `;
 
-      // 👉 seul le bouton supprime le filtre
       tag.querySelector(".tag-remove").addEventListener("click", () => {
         selectedFilters[type] = (selectedFilters[type] || []).filter(
           (v) => v !== val
@@ -280,7 +278,7 @@ function filterRecipes() {
     return matchSearch && matchIngredients && matchAppliances && matchUstensils;
   });
 
-  // Ajouter une croix pour supprimer le contenu des input
+  // Gère la crooix de l'input principal
   searchInput.addEventListener("input", () => {
     if (searchInput.value.trim().length > 0) {
       clearSearch.style.display = "block";
@@ -324,7 +322,8 @@ function displayRecipes(list) {
     return;
   }
 
-  const DESC_CHAR_LIMIT = 200; // seuil après lequel on affiche "Voir plus"
+  // seuil après lequel on affiche "Voir plus"
+  const DESC_CHAR_LIMIT = 200;
 
   list.forEach((recipe) => {
     const card = document.createElement("div");
@@ -403,6 +402,7 @@ function displayRecipes(list) {
   });
 }
 
+// Affiche correctement les caractères spéciaux
 function escapeHtml(str) {
   if (!str && str !== "") return "";
   return String(str)
@@ -413,6 +413,6 @@ function escapeHtml(str) {
     .replace(/'/g, "&#39;");
 }
 
-// Initialisation
+// Init
 filterRecipes();
 displayRecipes(recipes);

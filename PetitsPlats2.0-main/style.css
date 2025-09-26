@@ -4,7 +4,7 @@ body {
   background: #ededed;
 }
 
-/* --- HERO --- */
+/* --- HEADER --- */
 .hero {
   background: url("header.png") center/cover no-repeat;
   text-align: center;
@@ -26,7 +26,7 @@ body {
   color: #ffd15b;
 }
 
-/* --- SEARCH --- */
+/* --- BARRE DE RECHERCHE --- */
 .search-bar {
   position: relative;
   margin-top: 1rem;
@@ -55,7 +55,7 @@ body {
 
 #clearSearch {
   position: absolute;
-  right: 80px; /* pile avant le bouton (ajuste selon padding du bouton) */
+  right: 80px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 20px;
@@ -64,7 +64,7 @@ body {
   display: none;
 }
 
-/* --- FILTERS LAYOUT --- */
+/* --- FILTRES --- */
 .filters-bar {
   display: flex;
   flex-direction: column;
@@ -107,14 +107,12 @@ body {
   padding: 5px;
 }
 
-/* chaque filtre ouvert a son fond blanc */
 #ingredientFilter.filter-box.open,
 #applianceFilter.filter-box.open,
 #ustensilFilter.filter-box.open {
   background-color: white;
 }
 
-/* HEADER */
 .filter-header {
   background-color: white;
   border-radius: 8px;
@@ -169,7 +167,7 @@ body {
   display: block;
 }
 
-/* INPUT SEARCH */
+/* BARRE DE RECHERCHE DES FILTRES */
 .filter-search {
   position: absolute;
   top: 0;
@@ -184,18 +182,16 @@ body {
   display: none;
 }
 
-/* wrapper pour aligner loupe + input + croix */
 .filter-input-wrapper {
   position: relative;
   width: 100%;
-  display: none; /* masqué tant que filtre fermé */
+  display: none;
 }
 
 .filter-box.open .filter-input-wrapper {
   display: block;
 }
 
-/* loupe : toujours visible à droite */
 .search-icon {
   position: absolute;
   right: 20px;
@@ -206,7 +202,6 @@ body {
   pointer-events: none;
 }
 
-/* croix : invisible tant qu'on n'a rien écrit */
 .clear-filter {
   position: absolute;
   right: 45px;
@@ -218,7 +213,6 @@ body {
   display: none;
 }
 
-/* affichage de la croix quand input rempli */
 .filter-input-wrapper .filter-search.has-text + .fa-xmark {
   display: block;
 }
@@ -241,13 +235,11 @@ body {
   list-style: none;
 }
 
-/* Quand le filtre est ouvert */
 .filter-box.open .filter-search,
 .filter-box.open .filter-options {
   display: block;
 }
 
-/* Option items */
 .filter-options .option-item {
   padding: 10px 12px;
   cursor: pointer;
@@ -309,7 +301,7 @@ body {
   cursor: pointer;
 }
 
-/* --- RECIPES --- */
+/* --- RECIPES CARD --- */
 #recipes-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -454,7 +446,7 @@ h3 {
   }
 
   #recipes-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 colonnes au lieu de 3 */
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
     padding: 0 20px;
   }
@@ -516,7 +508,7 @@ h3 {
   }
 
   #recipes-container {
-    grid-template-columns: 1fr; /* 1 colonne */
+    grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 1rem;
   }
