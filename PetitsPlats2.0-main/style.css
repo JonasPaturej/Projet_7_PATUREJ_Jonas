@@ -440,3 +440,103 @@ h3 {
   color: gray;
   font-size: 0.9rem;
 }
+
+/* --- TABLETTES (768px à 1199px) --- */
+@media (max-width: 1199px) {
+  .hero img {
+    top: 20px;
+    left: 20px;
+    width: 150px;
+  }
+
+  .search-bar {
+    width: 80%;
+  }
+
+  #recipes-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes au lieu de 3 */
+    gap: 2rem;
+    padding: 0 20px;
+  }
+
+  .filter-group {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .filter-box {
+    width: 45%;
+  }
+
+  #activeFilters {
+    width: 95%;
+  }
+}
+
+/* --- MOBILES (≤767px) --- */
+@media (max-width: 767px) {
+  .hero {
+    padding: 6rem 1rem;
+    text-align: left;
+  }
+
+  .hero img {
+    top: 10px;
+    left: 10px;
+    width: 120px;
+  }
+
+  .hero h1 {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+
+  .search-bar {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .search-bar input {
+    font-size: 0.9rem;
+    padding: 1rem;
+  }
+
+  .search-bar button {
+    padding: 0 0.5rem;
+    margin: 5px;
+  }
+
+  .filters-row {
+    display: inline-block;
+  }
+
+  #recipeCount {
+    text-align: center;
+    margin-left: 10px;
+  }
+
+  #recipes-container {
+    grid-template-columns: 1fr; /* 1 colonne */
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .recipe-card img {
+    height: 180px;
+  }
+
+  .filter-group {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .filter-box {
+    width: 95%;
+  }
+
+  #activeFilters {
+    width: 100%;
+    margin: 0 1rem;
+  }
+}
