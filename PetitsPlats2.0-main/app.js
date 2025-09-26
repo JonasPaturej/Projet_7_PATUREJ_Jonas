@@ -246,7 +246,7 @@ function fillFilter(element, items) {
 function filterRecipes() {
   const searchTerm = searchInput.value.toLowerCase();
 
-  // Moins de 3 caractères = pas d'affichage de recette
+  // Moins de 3 caractères = on affiche tout
   if (searchTerm.length > 0 && searchTerm.length < 3) {
     currentRecipes = recipes;
     displayRecipes(currentRecipes);
@@ -257,48 +257,76 @@ function filterRecipes() {
     return;
   }
 
-  let filtered = recipes.filter((recipe) => {
-    const matchSearch =
-      recipe.name.toLowerCase().includes(searchTerm) ||
-      recipe.description.toLowerCase().includes(searchTerm) ||
-      recipe.ingredients.some((i) =>
-        i.ingredient.toLowerCase().includes(searchTerm)
-      );
+  let filtered = [];
+  for (let i = 0; i < recipes.length; i++) {
+    const recipe = recipes[i];
+    let matchSearch = false;
 
-    const matchIngredients = selectedFilters.ingredients.every((f) =>
-      recipe.ingredients.some((i) => i.ingredient === f)
-    );
-    const matchAppliances = selectedFilters.appliances.every(
-      (f) => recipe.appliance === f
-    );
-    const matchUstensils = selectedFilters.ustensils.every((f) =>
-      recipe.ustensils.includes(f)
-    );
-
-    return matchSearch && matchIngredients && matchAppliances && matchUstensils;
-  });
-
-  // Gère la crooix de l'input principal
-  searchInput.addEventListener("input", () => {
-    if (searchInput.value.trim().length > 0) {
-      clearSearch.style.display = "block";
-    } else {
-      clearSearch.style.display = "none";
+    // Vérif nom
+    if (recipe.name.toLowerCase().includes(searchTerm)) {
+      matchSearch = true;
     }
-  });
 
-  clearSearch.addEventListener("click", () => {
-    searchInput.value = "";
-    clearSearch.style.display = "none";
-    searchInput.focus();
-    filterRecipes();
-  });
+    // Vérif description
+    if (!matchSearch && recipe.description.toLowerCase().includes(searchTerm)) {
+      matchSearch = true;
+    }
 
-  // Mettre à jour la variable globale
+    // Vérif ingrédients
+    if (!matchSearch) {
+      for (let j = 0; j < recipe.ingredients.length; j++) {
+        if (
+          recipe.ingredients[j].ingredient.toLowerCase().includes(searchTerm)
+        ) {
+          matchSearch = true;
+          break;
+        }
+      }
+    }
+
+    // Vérif filtres actifs
+    if (matchSearch) {
+      let matchIngredients = true;
+      for (let f = 0; f < selectedFilters.ingredients.length; f++) {
+        const filterIng = selectedFilters.ingredients[f];
+        let found = false;
+        for (let k = 0; k < recipe.ingredients.length; k++) {
+          if (recipe.ingredients[k].ingredient === filterIng) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          matchIngredients = false;
+          break;
+        }
+      }
+
+      let matchAppliances = true;
+      for (let f = 0; f < selectedFilters.appliances.length; f++) {
+        if (recipe.appliance !== selectedFilters.appliances[f]) {
+          matchAppliances = false;
+          break;
+        }
+      }
+
+      let matchUstensils = true;
+      for (let f = 0; f < selectedFilters.ustensils.length; f++) {
+        if (!recipe.ustensils.includes(selectedFilters.ustensils[f])) {
+          matchUstensils = false;
+          break;
+        }
+      }
+
+      if (matchIngredients && matchAppliances && matchUstensils) {
+        filtered.push(recipe);
+      }
+    }
+  }
+
+  // Mise à jour de l'affichage
   currentRecipes = filtered;
-
   displayRecipes(filtered);
-
   ingredientUI && ingredientUI.update();
   applianceUI && applianceUI.update();
   ustensilUI && ustensilUI.update();
