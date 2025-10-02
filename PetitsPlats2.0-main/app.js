@@ -257,6 +257,22 @@ function filterRecipes() {
     return;
   }
 
+  // Gère la crooix de l'input principal
+  searchInput.addEventListener("input", () => {
+    if (searchInput.value.trim().length > 0) {
+      clearSearch.style.display = "block";
+    } else {
+      clearSearch.style.display = "none";
+    }
+  });
+
+  clearSearch.addEventListener("click", () => {
+    searchInput.value = "";
+    clearSearch.style.display = "none";
+    searchInput.focus();
+    filterRecipes();
+  });
+
   let filtered = [];
   for (let i = 0; i < recipes.length; i++) {
     const recipe = recipes[i];
