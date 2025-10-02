@@ -349,12 +349,14 @@ body {
 
 .recipe-info {
   padding: 1rem;
+  font-family: "Manrope";
 }
 
 .recipe-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: "Anton";
 }
 
 .time {

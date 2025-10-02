@@ -278,22 +278,6 @@ function filterRecipes() {
     return matchSearch && matchIngredients && matchAppliances && matchUstensils;
   });
 
-  // Gère la crooix de l'input principal
-  searchInput.addEventListener("input", () => {
-    if (searchInput.value.trim().length > 0) {
-      clearSearch.style.display = "block";
-    } else {
-      clearSearch.style.display = "none";
-    }
-  });
-
-  clearSearch.addEventListener("click", () => {
-    searchInput.value = "";
-    clearSearch.style.display = "none";
-    searchInput.focus();
-    filterRecipes();
-  });
-
   // Mettre à jour la variable globale
   currentRecipes = filtered;
 
@@ -304,6 +288,22 @@ function filterRecipes() {
   ustensilUI && ustensilUI.update();
   renderActiveFilters();
 }
+
+// Gère la crooix de l'input principal
+searchInput.addEventListener("input", () => {
+  if (searchInput.value.trim().length > 0) {
+    clearSearch.style.display = "block";
+  } else {
+    clearSearch.style.display = "none";
+  }
+});
+
+clearSearch.addEventListener("click", () => {
+  searchInput.value = "";
+  clearSearch.style.display = "none";
+  searchInput.focus();
+  filterRecipes();
+});
 
 // Recherche globale
 searchInput.addEventListener("input", filterRecipes);
